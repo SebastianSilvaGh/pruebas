@@ -5,22 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Códigos Disponibles</title>
+    <style>
+        #generatingMessage {
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+    </style>
     <script>
+        let blinkingInterval;
+
         async function obtenerCodigo() {
             // Muestra el mensaje de "Generando código..."
             document.getElementById('codigoDisplay').innerText = "Generando código...";
             document.getElementById('codigoDisplay').classList.remove('font-weight-bold');
 
+            // Comienza el parpadeo
+            blinkingInterval = setInterval(() => {
+                const messageElement = document.getElementById('codigoDisplay');
+                messageElement.style.opacity = messageElement.style.opacity === '1' ? '0' : '1';
+            }, 500); // Cambia la opacidad cada 500 ms
+
             try {
                 const response = await fetch('https://script.google.com/macros/s/AKfycby0rs-XEGWryq-fO_1LGqfORH1093zJ0H9xcOYHCgrSGMRrVCFaT3XHPRucA8_k91Ao0Q/exec');
                 const codigo = await response.text();
 
-                // Muestra el código obtenido
+                // Detiene el parpadeo y muestra el código obtenido
+                clearInterval(blinkingInterval);
                 document.getElementById('codigoDisplay').innerText = codigo;
                 document.getElementById('codigoDisplay').classList.add('font-weight-bold'); // Aplica el estilo de negrita
+                document.getElementById('codigoDisplay').style.opacity = '1'; // Asegúrate de que esté visible
             } catch (error) {
+                clearInterval(blinkingInterval);
                 console.error("Error al obtener el código:", error);
                 document.getElementById('codigoDisplay').innerText = "Error al cargar el código.";
+                document.getElementById('codigoDisplay').style.opacity = '1'; // Asegúrate de que esté visible
             }
         }
 
