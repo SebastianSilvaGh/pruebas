@@ -36,15 +36,18 @@
                 document.getElementById('codeDisplay').innerText = randomCode;
                 document.title = randomCode; // Cambia el título de la página al código
             } else {
-                document.getElementById('codeDisplay').innerText = "No hay más códigos disponibles.";
-                // Reiniciar si es necesario
-                // usedCodes = []; // Descomentar para reiniciar
-                // localStorage.removeItem('usedCodes'); // Descomentar para limpiar el localStorage
+                document.getElementById('codeDisplay').innerText = "NO HAY MÁS CÓDIGOS DISPONIBLES";
             }
         }
 
         function getNewCode() {
             fetchRandomCode();
+        }
+
+        function resetCodes() {
+            usedCodes = []; // Reinicia el array de códigos utilizados
+            localStorage.removeItem('usedCodes'); // Limpia el localStorage
+            fetchRandomCode(); // Muestra un nuevo código
         }
 
         window.onload = fetchCodes;
@@ -53,7 +56,7 @@
 <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
     <div class="text-center">
         <h1 id="codeDisplay" class="display-4 font-weight-bold"></h1> <!-- Código en negrita -->
-        <button onclick="getNewCode()" class="btn btn-primary mt-4">Obtener nuevo código</button>
+        <button onclick="resetCodes()" class="btn btn-secondary mt-2">Reiniciar Códigos</button> <!-- Botón para reiniciar -->
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -61,3 +64,4 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
