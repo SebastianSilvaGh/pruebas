@@ -3,64 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Código Aleatorio</title>
+    <title>Códigos Aleatorios</title>
     <script>
-        let usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
-        let allCodes = [];
+        const SPREADSHEET_ID = '1EcPa42oqo5nYxLO6eezKAvrIHCGicU_ZRLuZzXQHyOY'; // Reemplaza con tu ID de hoja
+        const API_KEY = 'AIzaSyB43tJGaEguL5qgFCc-EfczXIV05C0T6dw'; // Reemplaza con tu clave de API
 
-        async function fetchCodes() {
+        async function obtenerCodigos() {
             try {
-                // Agregando un parámetro de versión para evitar caché
-                const response = await fetch('codigos.json?v=' + new Date().getTime());
-                if (!response.ok) {
-                    throw new Error('Error al cargar el archivo JSON');
-                }
+                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Hoja1!A:A?key=${API_KEY}`);
+                if (!response.ok) throw new Error('Error al obtener los códigos');
+                
                 const data = await response.json();
-                allCodes = data.codigos;
-                fetchRandomCode();
+                return data.values.flat();
             } catch (error) {
                 console.error(error);
-                document.getElementById('codeDisplay').innerText = "Error al cargar los códigos.";
+                document.getElementById('codigoDisplay').innerText = error.message;
             }
         }
 
-        function fetchRandomCode() {
-            const availableCodes = allCodes.filter(code => !usedCodes.includes(code));
-
-            if (availableCodes.length > 0) {
-                const randomIndex = Math.floor(Math.random() * availableCodes.length);
-                const randomCode = availableCodes[randomIndex];
-                usedCodes.push(randomCode);
-                localStorage.setItem('usedCodes', JSON.stringify(usedCodes)); // Guardar en localStorage
-                document.getElementById('codeDisplay').innerText = randomCode;
-                document.title = randomCode; // Cambia el título de la página al código
-            } else {
-                document.getElementById('codeDisplay').innerText = "NO HAY MÁS CÓDIGOS DISPONIBLES";
-            }
+        async function obtenerCodigo() {
+            const codigos = await obtenerCodigos();
+            const codigoSeleccionado = codigos[Math.floor(Math.random() * codigos.length)];
+            document.getElementById('codigoDisplay').innerText = codigoSeleccionado || 'No hay códigos disponibles';
         }
 
-        function getNewCode() {
-            fetchRandomCode();
-        }
-
-        function resetCodes() {
-            usedCodes = []; // Reinicia el array de códigos utilizados
-            localStorage.removeItem('usedCodes'); // Limpia el localStorage
-            fetchRandomCode(); // Muestra un nuevo código
-        }
-
-        window.onload = fetchCodes;
+        window.onload = obtenerCodigo;
     </script>
 </head>
-<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="text-center">
-        <h1 id="codeDisplay" class="display-4 font-weight-bold"></h1> <!-- Código en negrita -->
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<body>
+    <h1 id="codigoDisplay">Cargando código...</h1>
 </body>
 </html>
-
