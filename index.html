@@ -9,10 +9,18 @@
         let allCodes = [];
 
         async function fetchCodes() {
-            const response = await fetch('codigos.json'); // Asegúrate de que el archivo esté en el mismo directorio
-            const data = await response.json();
-            allCodes = data.codigos;
-            fetchRandomCode();
+            try {
+                const response = await fetch('codigos.json'); // Asegúrate de que el archivo esté accesible
+                if (!response.ok) {
+                    throw new Error('Error al cargar el archivo JSON');
+                }
+                const data = await response.json();
+                allCodes = data.codigos;
+                fetchRandomCode();
+            } catch (error) {
+                console.error(error);
+                document.getElementById('codeDisplay').innerText = "Error al cargar los códigos.";
+            }
         }
 
         function fetchRandomCode() {
