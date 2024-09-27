@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Código Aleatorio</title>
     <script>
-        let usedCodes = [];
+        let usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
         let allCodes = [];
 
         async function fetchCodes() {
@@ -31,12 +31,14 @@
                 const randomIndex = Math.floor(Math.random() * availableCodes.length);
                 const randomCode = availableCodes[randomIndex];
                 usedCodes.push(randomCode);
+                localStorage.setItem('usedCodes', JSON.stringify(usedCodes)); // Guardar en localStorage
                 document.getElementById('codeDisplay').innerText = randomCode;
                 document.title = randomCode; // Cambia el título de la página al código
             } else {
                 document.getElementById('codeDisplay').innerText = "No hay más códigos disponibles.";
-                // Reinicia si es necesario
+                // Reiniciar si es necesario
                 // usedCodes = []; // Descomentar para reiniciar
+                // localStorage.removeItem('usedCodes'); // Descomentar para limpiar el localStorage
             }
         }
 
