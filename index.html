@@ -1,1 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Código Aleatorio</title>
+    <script>
+        let usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
+        let allCodes = [];
+
+        async function fetchCodes() {
+            try {
+                // Agregando un parámetro de versión para evitar caché
+                const response = await fetch('codigos.json?v=' + new Date().getTime());
+                if (!response.ok) {
+                    throw new Error('Error al cargar el archivo JSON');
+                }
+                const data = await response.json();
+                allCodes = data.codigos;
+                fetchRandomCode();
+            } catch (error) {
+                console.error(error);
+                document.getElementById('codeDisplay').innerText = "Error al cargar los códigos.";
+            }
+        }
+
+        function fetchRandomCode() {
+            const availableCodes = allCodes.filter(code => !usedCodes.includes(code));
+
+            if (availableCodes.length > 0) {
+                const randomIndex = Math.floor(Math.random() * availableCodes.length);
+                const randomCode = availableCodes[randomIndex];
+                usedCodes.push(randomCode);
+                localStorage.setItem('usedCodes', JSON.stringify(usedCodes)); // Guardar en localStorage
+                document.getElementById('codeDisplay').innerText = randomCode;
+                document.title = randomCode; // Cambia el título de la página al código
+            } else {
+                document.getElementById('codeDisplay').innerText = "NO HAY MÁS CÓDIGOS DISPONIBLES";
+                // Reiniciar si es necesario
+                usedCodes = []; // Descomentar para reiniciar
+                // localStorage.removeItem('usedCodes'); // Descomentar para limpiar el localStorage
+            }
+        }
+
+        function getNewCode() {
+            fetchRandomCode();
+        }
+
+        window.onload = fetchCodes;
+    </script>
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="text-center">
+        <h1 id="codeDisplay" class="display-4 font-weight-bold"></h1> <!-- Código en negrita -->
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
 
