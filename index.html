@@ -11,7 +11,8 @@
 
         async function fetchCodes() {
             try {
-                const response = await fetch('codigos.json');
+                // Agregando un parámetro de versión para evitar caché
+                const response = await fetch('codigos.json?v=' + new Date().getTime());
                 if (!response.ok) {
                     throw new Error('Error al cargar el archivo JSON');
                 }
@@ -51,7 +52,7 @@
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
     <div class="text-center">
-        <h1 id="codeDisplay" class="display-4 font-weight-bold"></h1>
+        <h1 id="codeDisplay" class="display-4 font-weight-bold"></h1> <!-- Código en negrita -->
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
