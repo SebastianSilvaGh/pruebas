@@ -3,65 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Códigos Aleatorios</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Códigos Disponibles</title>
     <script>
-        const SPREADSHEET_ID = '1EcPa42oqo5nYxLO6eezKAvrIHCGicU_ZRLuZzXQHyOY'; // Reemplaza con tu ID de hoja
-        const API_KEY = 'AIzaSyAbZYBHlZs1SfevfDicfmFQIuwxvdjJmrQ'; // Reemplaza con tu clave de API
-
-        async function obtenerCodigos() {
-            try {
-                const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Codigos!A:B?key=${API_KEY}`);
-                if (!response.ok) throw new Error('Error al obtener los códigos');
-
-                const data = await response.json();
-                return data.values.filter(row => row[1] === 'disponible'); // Filtra solo los disponibles
-            } catch (error) {
-                console.error(error);
-                document.getElementById('codigoDisplay').innerText = error.message;
-            }
-        }
-
-        async function marcarComoUtilizado(codigo) {
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Hoja1!A:B:batchUpdate?key=${API_KEY}`;
-            const body = {
-                "data": [
-                    {
-                        "range": `Hoja1!A:A`, // Cambia esto según la ubicación del código
-                        "values": [[codigo]],
-                        "userEnteredValue": { "stringValue": "utilizado" }
-                    }
-                ],
-                "valueInputOption": "USER_ENTERED"
-            };
-
-            await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${API_KEY}`
-                },
-                body: JSON.stringify(body)
-            });
-        }
-
         async function obtenerCodigo() {
-            const codigos = await obtenerCodigos();
-            if (codigos.length > 0) {
-                const randomIndex = Math.floor(Math.random() * codigos.length);
-                const codigoSeleccionado = codigos[randomIndex][0]; // Obtén el código
-                document.getElementById('codigoDisplay').innerText = codigoSeleccionado;
-
-                // Marcar el código como utilizado
-                await marcarComoUtilizado(codigoSeleccionado);
-            } else {
-                document.getElementById('codigoDisplay').innerText = 'No hay códigos disponibles';
+            try {
+                const response = await fetch('https://script.google.com/macros/s/AKfycby0rs-XEGWryq-fO_1LGqfORH1093zJ0H9xcOYHCgrSGMRrVCFaT3XHPRucA8_k91Ao0Q/exec');
+                const codigo = await response.text();
+                document.getElementById('codigoDisplay').innerText = codigo;
+            } catch (error) {
+                console.error("Error al obtener el código:", error);
+                document.getElementById('codigoDisplay').innerText = "Error al cargar el código.";
             }
         }
-
-        window.onload = obtenerCodigo;
     </script>
 </head>
-<body>
-    <h1 id="codigoDisplay">Cargando código...</h1>
+<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="container text-center">
+        <h1 class="display-4">Generador de Códigos</h1>
+        <p class="lead">Presiona el botón para obtener un código único que no se repetirá entre usuarios.</p>
+        <button class="btn btn-primary" onclick="obtenerCodigo()">Obtener Código</button>
+        <h2 id="codigoDisplay" class="mt-4"></h2>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
