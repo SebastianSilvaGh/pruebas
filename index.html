@@ -7,10 +7,17 @@
     <title>Códigos Disponibles</title>
     <script>
         async function obtenerCodigo() {
+            // Muestra el mensaje de "Generando código..."
+            document.getElementById('codigoDisplay').innerText = "Generando código...";
+            document.getElementById('codigoDisplay').classList.remove('font-weight-bold');
+
             try {
                 const response = await fetch('https://script.google.com/macros/s/AKfycby0rs-XEGWryq-fO_1LGqfORH1093zJ0H9xcOYHCgrSGMRrVCFaT3XHPRucA8_k91Ao0Q/exec');
                 const codigo = await response.text();
+
+                // Muestra el código obtenido
                 document.getElementById('codigoDisplay').innerText = codigo;
+                document.getElementById('codigoDisplay').classList.add('font-weight-bold'); // Aplica el estilo de negrita
             } catch (error) {
                 console.error("Error al obtener el código:", error);
                 document.getElementById('codigoDisplay').innerText = "Error al cargar el código.";
@@ -25,7 +32,7 @@
     <div class="container text-center">
         <h1 class="display-4">Generador de Códigos</h1>
         <p class="lead">Aquí tienes tu código único:</p>
-        <h2 id="codigoDisplay" class="mt-4 font-weight-bold"></h2> <!-- Código en negrita -->
+        <h2 id="codigoDisplay" class="mt-4"></h2> <!-- Código en negrita -->
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
