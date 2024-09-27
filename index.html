@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Códigos</title>
+    <script>
+        let usedCodes = [];
+        let allCodes = [];
+
+        async function fetchCodes() {
+            const response = await fetch('codigos.json'); // Asegúrate de que el archivo esté en el mismo directorio
+            const data = await response.json();
+            allCodes = data.codigos;
+            fetchRandomCode();
+        }
+
+        function fetchRandomCode() {
+            const availableCodes = allCodes.filter(code => !usedCodes.includes(code));
+
+            if (availableCodes.length > 0) {
+                const randomIndex = Math.floor(Math.random() * availableCodes.length);
+                const randomCode = availableCodes[randomIndex];
+                usedCodes.push(randomCode);
+                document.getElementById('codeDisplay').innerText = randomCode;
+            } else {
+                document.getElementById('codeDisplay').innerText = "No hay más códigos disponibles.";
+            }
+        }
+
+        window.onload = fetchCodes;
+    </script>
+</head>
+<body>
+    <h1>Código Aleatorio</h1>
+    <div id="codeDisplay"></div>
+</body>
+</html>
