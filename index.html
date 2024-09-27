@@ -16,14 +16,16 @@
                 document.getElementById('codigoDisplay').innerText = "Error al cargar el código.";
             }
         }
+
+        // Llama a la función al cargar la página
+        window.onload = obtenerCodigo;
     </script>
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
     <div class="container text-center">
         <h1 class="display-4">Generador de Códigos</h1>
-        <p class="lead">Presiona el botón para obtener un código único que no se repetirá entre usuarios.</p>
-        <button class="btn btn-primary" onclick="obtenerCodigo()">Obtener Código</button>
-        <h2 id="codigoDisplay" class="mt-4"></h2>
+        <p class="lead">Aquí tienes tu código único:</p>
+        <h2 id="codigoDisplay" class="mt-4 font-weight-bold"></h2> <!-- Código en negrita -->
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
